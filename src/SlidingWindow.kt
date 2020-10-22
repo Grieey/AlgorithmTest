@@ -11,6 +11,7 @@ fun testSlidingWindow() {
   println("s1:\"ab\" s2:\"ba\" 输出${checkInclusion("ab", "ba")}")
   println("s1:\"cbaebabacd\" s2:\"abc\" 输出${findAnagrams("cbaebabacd", "abc")}")
   println("s1:\"baa\" s2:\"aa\" 输出${findAnagrams("baa", "aa")}")
+  println("s1:\"abcabcbb\"  输出${lengthOfLongestSubstring("abcabcbb")}")
 }
 
 /**
@@ -229,4 +230,51 @@ fun findAnagrams(s: String, p: String): List<Int> {
   }
 
   return indexs
+}
+
+/**
+ * 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+ *
+ * 示例 1:
+ *
+ * 输入: "abcabcbb"
+ * 输出: 3
+ * 解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+ * 示例 2:
+ *
+ * 输入: "bbbbb"
+ * 输出: 1
+ * 解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+ * 示例 3:
+ *
+ * 输入: "pwwkew"
+ * 输出: 3
+ * 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+ *      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+ */
+fun lengthOfLongestSubstring(s: String): Int {
+  if (s.isEmpty()) return 0
+
+  val window = mutableMapOf<Char, Int>()
+
+  var left = 0
+  var right = 0
+  var maxLen = 0
+
+  while (right <= s.lastIndex) {
+    val rightChar = s[right]
+    right++
+
+    window[rightChar] = (window[rightChar] ?: 0) + 1
+
+    while ((window[rightChar] ?: 0) > 1) {
+      val leftChar = s[left]
+      left++
+      window[leftChar] = (window[leftChar] ?: 1) - 1
+    }
+
+    maxLen = maxLen.coerceAtLeast(right - left)
+  }
+
+  return maxLen
 }
