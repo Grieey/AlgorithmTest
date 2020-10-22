@@ -10,6 +10,7 @@ fun testSlidingWindow() {
   println("s1:\"ab\" s2:\"eidboaoo\" 输出${checkInclusion("ab", "eidboaoo")}")
   println("s1:\"ab\" s2:\"ba\" 输出${checkInclusion("ab", "ba")}")
   println("s1:\"cbaebabacd\" s2:\"abc\" 输出${findAnagrams("cbaebabacd", "abc")}")
+  println("s1:\"baa\" s2:\"aa\" 输出${findAnagrams("baa", "aa")}")
 }
 
 /**
@@ -207,7 +208,7 @@ fun findAnagrams(s: String, p: String): List<Int> {
     }
 
     // 当检查的字符的长度等于目标窗口的长度时，进行判断是否是目标的排列
-    while (right - left == need.size) {
+    while (right - left >= p.length) {
 
       // 频数一样则是排列，更新索引
       if (valid == need.size) {
