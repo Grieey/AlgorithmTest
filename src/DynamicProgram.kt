@@ -7,10 +7,19 @@ import java.lang.Integer.max
  */
 fun testMaxProfit() {
 //  println(maxProfitWithK(2, intArrayOf(3, 2, 6, 5, 0, 3)))
-  println(maxProfit(2, intArrayOf(3, 2, 6, 5, 0, 3)))
+//  println(maxProfitWithK2(2, intArrayOf(3, 2, 6, 5, 0, 3)))
 //  println(maxProfitWithK(1, intArrayOf(1, 2)))
-  println(maxProfit(1, intArrayOf(1, 2)))
-  println(maxProfit(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
+//  println(maxProfitWithK2(1, intArrayOf(1, 2)))
+//  println(maxProfitWithK2(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
+//  println(robInRange(intArrayOf(1, 2, 3, 1), 0, 2))
+
+  val root = TreeNode(3)
+  root.left = TreeNode(2)
+  root.right = TreeNode(3)
+  root.left?.right = TreeNode(3)
+  root.right?.right = TreeNode(1)
+
+  println(rob(root))
 }
 
 /**
@@ -153,6 +162,7 @@ fun maxProfitUtrlKWithCoolDown(prices: IntArray): Int {
  * 解释: 在第 2 天 (股票价格 = 2) 的时候买入，在第 3 天 (股票价格 = 6) 的时候卖出, 这笔交易所能获得利润 = 6-2 = 4 。
  *      随后，在第 5 天 (股票价格 = 0) 的时候买入，在第 6 天 (股票价格 = 3) 的时候卖出, 这笔交易所能获得利润 = 3-0 = 3 。
  */
+@Deprecated("这个解法有问题", replaceWith = ReplaceWith("maxProfitWithK2"))
 fun maxProfitWithK(k: Int, prices: IntArray): Int {
   if (prices.isEmpty() || prices.size == 1) return 0
 
@@ -175,23 +185,7 @@ fun maxProfitWithK(k: Int, prices: IntArray): Int {
   return dp[prices.lastIndex][k][0]
 }
 
-fun maxProfit_k_any(max_k: Int, prices: IntArray): Int {
-  val n = prices.size
-  if (max_k > n / 2) return maxProfitUtrlK(prices)
-  val dp = Array(n) { Array(max_k + 1) { IntArray(2) } }
-  for (i in 0 until n) for (k in max_k downTo 1) {
-    if (i - 1 == -1) { /* 处理 base case */
-      dp[0][k][0] = 0
-      dp[0][k][1] = Int.MIN_VALUE
-      continue
-    }
-    dp[i][k][0] = max(dp[i - 1][k][0], dp[i - 1][k][1] + prices[i])
-    dp[i][k][1] = max(dp[i - 1][k][1], dp[i - 1][k - 1][0] - prices[i])
-  }
-  return dp[n - 1][max_k][0]
-}
-
-fun maxProfit(k: Int, prices: IntArray): Int {
+fun maxProfitWithK2(k: Int, prices: IntArray): Int {
   if (k < 1) {
     return 0
   }
@@ -219,5 +213,76 @@ fun maxProfit(k: Int, prices: IntArray): Int {
     }
   }
   return dp[k - 1][1]
+}
+
+private fun robInRange(nums: IntArray, start: Int, end: Int): Int {
+  var dp: Int = 0
+  var dp1: Int = 0
+  var dp2: Int = 0
+
+  for (i in end downTo start) {
+    dp = Math.max(dp1, (nums[i] + dp2))
+    dp2 = dp1
+    dp1 = dp
+  }
+
+  return dp
+}
+
+val map = mutableMapOf<TreeNode, Int>()
+
+/**
+ * 337 中等难度
+ * 在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+ *
+ * 计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+ *
+ * 示例 1:
+ *
+ * 输入: [3,2,3,null,3,null,1]
+ *
+ * 3
+ * / \
+ * 2   3
+ * \   \
+ * 3   1
+ *
+ * 输出: 7
+ * 解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+ * 示例 2:
+ *
+ * 输入: [3,4,5,1,3,null,1]
+ *
+ *      3
+ * / \
+ * 4   5
+ * / \   \
+ * 1   3   1
+ *
+ * 输出: 9
+ * 解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+ */
+fun rob(root: TreeNode?): Int {
+  if (root == null) return 0
+
+  if (map.containsKey(root)) return map[root] ?: 0
+
+  val robLeft = if (root.left == null) 0 else rob(root.left?.left) + rob(root.left?.right)
+  val robRight = if (root.right == null) 0 else rob(root.right?.left) + rob(root.right?.right)
+
+  val rob = root.`val` + robLeft + robRight
+
+  val notRob = rob(root.left) + rob(root.right)
+
+  val result = Math.max(rob, notRob)
+
+  map[root] = result
+
+  return result
+}
+
+data class TreeNode(val `val`: Int) {
+  var left: TreeNode? = null
+  var right: TreeNode? = null
 }
 
