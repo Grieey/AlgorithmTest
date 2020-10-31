@@ -6,12 +6,15 @@ import java.lang.Integer.max
  * @author: Grieey
  */
 fun testMaxProfit() {
-//  println(maxProfitWithK(2, intArrayOf(3, 2, 6, 5, 0, 3)))
-//  println(maxProfitWithK2(2, intArrayOf(3, 2, 6, 5, 0, 3)))
-//  println(maxProfitWithK(1, intArrayOf(1, 2)))
-//  println(maxProfitWithK2(1, intArrayOf(1, 2)))
-//  println(maxProfitWithK2(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
-//  println(robInRange(intArrayOf(1, 2, 3, 1), 0, 2))
+  println(maxProfitWithK(2, intArrayOf(3, 2, 6, 5, 0, 3)))
+  println(maxProfitWithK2(2, intArrayOf(3, 2, 6, 5, 0, 3)))
+  println(maxProfitWithK(1, intArrayOf(1, 2)))
+  println(maxProfitWithK2(1, intArrayOf(1, 2)))
+  println(maxProfitWithK2(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
+}
+
+fun testRob() {
+  println(robInRange(intArrayOf(1, 2, 3, 1), 0, 2))
 
   val root = TreeNode(3)
   root.left = TreeNode(2)
@@ -285,4 +288,6 @@ data class TreeNode(val `val`: Int) {
   var left: TreeNode? = null
   var right: TreeNode? = null
 }
+
+
 

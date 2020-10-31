@@ -6,4 +6,5 @@
 fun main(args: Array<String>) {
 //  testMaxProfit()
 //  testSlidingWindow()
+  testRange()
 }
