@@ -6,23 +6,14 @@ import java.lang.Integer.max
  * @author: Grieey
  */
 fun testMaxProfit() {
-  println(maxProfitWithK(2, intArrayOf(3, 2, 6, 5, 0, 3)))
-  println(maxProfitWithK2(2, intArrayOf(3, 2, 6, 5, 0, 3)))
-  println(maxProfitWithK(1, intArrayOf(1, 2)))
-  println(maxProfitWithK2(1, intArrayOf(1, 2)))
-  println(maxProfitWithK2(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
-}
-
-fun testRob() {
-  println(robInRange(intArrayOf(1, 2, 3, 1), 0, 2))
-
-  val root = TreeNode(3)
-  root.left = TreeNode(2)
-  root.right = TreeNode(3)
-  root.left?.right = TreeNode(3)
-  root.right?.right = TreeNode(1)
-
-  println(rob(root))
+//  println(maxProfitWithK(2, intArrayOf(3, 2, 6, 5, 0, 3)))
+//  println(maxProfitWithK2(2, intArrayOf(3, 2, 6, 5, 0, 3)))
+//  println(maxProfitWithK(1, intArrayOf(1, 2)))
+//  println(maxProfitWithK2(1, intArrayOf(1, 2)))
+//  println(maxProfitWithK2(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
+  println(superEggDrop(2, 6))
+  println(superEggDropWithDp(2, 6))
+  println(superEggDropWithDp2(3, 14))
 }
 
 /**
@@ -287,6 +278,118 @@ fun rob(root: TreeNode?): Int {
 data class TreeNode(val `val`: Int) {
   var left: TreeNode? = null
   var right: TreeNode? = null
+}
+
+/**
+ * 887. 鸡蛋掉落 困难
+ * 你将获得 K 个鸡蛋，并可以使用一栋从 1 到 N  共有 N 层楼的建筑。
+ *
+ * 每个蛋的功能都是一样的，如果一个蛋碎了，你就不能再把它掉下去。
+ *
+ * 你知道存在楼层 F ，满足 0 <= F <= N 任何从高于 F 的楼层落下的鸡蛋都会碎，从 F 楼层或比它低的楼层落下的鸡蛋都不会破。
+ *
+ * 每次移动，你可以取一个鸡蛋（如果你有完整的鸡蛋）并把它从任一楼层 X 扔下（满足 1 <= X <= N）。
+ *
+ * 你的目标是确切地知道 F 的值是多少。
+ *
+ * 无论 F 的初始值如何，你确定 F 的值的最小移动次数是多少？
+ *
+ *
+ *
+ * 示例 1：
+ *
+ * 输入：K = 1, N = 2
+ * 输出：2
+ * 解释：
+ * 鸡蛋从 1 楼掉落。如果它碎了，我们肯定知道 F = 0 。
+ * 否则，鸡蛋从 2 楼掉落。如果它碎了，我们肯定知道 F = 1 。
+ * 如果它没碎，那么我们肯定知道 F = 2 。
+ * 因此，在最坏的情况下我们需要移动 2 次以确定 F 是多少。
+ * 示例 2：
+ *
+ * 输入：K = 2, N = 6
+ * 输出：3
+ * 示例 3：
+ *
+ * 输入：K = 3, N = 14
+ * 输出：4
+ *
+ *
+ * 提示：
+ *
+ * 1 <= K <= 100
+ * 1 <= N <= 10000
+ */
+fun superEggDrop(K: Int, N: Int): Int {
+  val memo = Array(K + 1) { IntArray(N + 1) { -1 } }
+  fun dp(k: Int, n: Int): Int {
+    if (k == 1) return n
+    if (n == 0) return 0
+
+    var res = Int.MAX_VALUE
+    if (memo[k][n] != -1) return memo[k][n]
+    var lo = 1
+    var hi = n
+    while (lo <= hi) {
+      val mid = (lo + hi) / 2
+      val broken = dp(k - 1, mid - 1)
+      val notBroken = dp(k, n - mid)
+      if (broken > notBroken) {
+        hi = mid - 1
+        res = Math.min(res, broken + 1)
+      } else {
+        lo = mid + 1
+        res = Math.min(res, notBroken + 1)
+      }
+    }
+    memo[k][n] = res
+    return res
+  }
+
+  return dp(K, N)
+}
+
+/**
+ * 自底向上的dp解法
+ */
+fun superEggDropWithDp(K: Int, N: Int): Int {
+  val dp = Array(K + 1) { IntArray(N + 1) }
+  for (m in 1..N) {
+    dp[0][m] = 0
+    for (k in 1..K) {
+      dp[k][m] = dp[k][m - 1] + dp[k - 1][m - 1] + 1
+      if (dp[k][m] >= N) return m
+    }
+  }
+
+  return N
+}
+
+/**
+ * 鸡蛋掉落，鹰蛋（Leetcode 887）：（经典dp）
+ * 有 K 个鸡蛋，有 N 层楼，用最少的操作次数 F 检查出鸡蛋的质量。
+ *
+ * 思路：
+ * 本题应该逆向思维，若你有 K 个鸡蛋，你最多操作 F 次，求 N 最大值。
+ *
+ * dp[k][f] = dp[k][f-1] + dp[k-1][f-1] + 1;
+ * 解释：
+ * 0.dp[k][f]：如果你还剩 k 个蛋，且只能操作 f 次了，所能确定的楼层。
+ * 1.dp[k][f-1]：蛋没碎，因此该部分决定了所操作楼层的上面所能容纳的楼层最大值
+ * 2.dp[k-1][f-1]：蛋碎了，因此该部分决定了所操作楼层的下面所能容纳的楼层最大值
+ * 又因为第 f 次操作结果只和第 f-1 次操作结果相关，因此可以只用一维数组。
+ *
+ * 时复：O(K*根号(N))
+ */
+fun superEggDropWithDp2(K: Int, N: Int): Int {
+  val dp = IntArray(K + 1)
+  var ans = 0
+  while (dp[K] < N) {
+    for (k in K downTo 1) dp[k] = dp[k] + dp[k - 1] + 1
+    ans++
+  }
+
+  return ans
 }
 
 

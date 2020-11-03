@@ -4,7 +4,8 @@
  * @author: Grieey
  */
 fun main(args: Array<String>) {
-//  testMaxProfit()
+  testMaxProfit()
 //  testSlidingWindow()
-  testRange()
+//  testRange()
+//  testNSum()
 }
