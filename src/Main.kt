@@ -8,4 +8,5 @@ fun main(args: Array<String>) {
 //  testSlidingWindow()
 //  testRange()
 //  testNSum()
+//  testTree()
 }

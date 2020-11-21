@@ -11,9 +11,11 @@ fun testMaxProfit() {
 //  println(maxProfitWithK(1, intArrayOf(1, 2)))
 //  println(maxProfitWithK2(1, intArrayOf(1, 2)))
 //  println(maxProfitWithK2(2, intArrayOf(1, 2, 4, 2, 5, 7, 2, 4, 9, 0)))
-  println(superEggDrop(2, 6))
-  println(superEggDropWithDp(2, 6))
-  println(superEggDropWithDp2(3, 14))
+//  println(superEggDrop(2, 6))
+//  println(superEggDropWithDp(2, 6))
+//  println(superEggDropWithDp2(3, 14))
+
+  println(canPartition(intArrayOf(1, 5, 11, 5)))
 }
 
 /**
@@ -390,6 +392,50 @@ fun superEggDropWithDp2(K: Int, N: Int): Int {
   }
 
   return ans
+}
+
+/**
+ * 416. 分割等和子集 中等
+ * 给定一个只包含正整数的非空数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+ *
+ * 注意:
+ *
+ * 每个数组中的元素不会超过 100
+ * 数组的大小不会超过 200
+ * 示例 1:
+ *
+ * 输入: [1, 5, 11, 5]
+ *
+ * 输出: true
+ *
+ * 解释: 数组可以分割成 [1, 5, 5] 和 [11].
+ *
+ *
+ * 示例 2:
+ *
+ * 输入: [1, 2, 3, 5]
+ *
+ * 输出: false
+ *
+ * 解释: 数组不能分割成两个元素和相等的子集.
+ */
+fun canPartition(nums: IntArray): Boolean {
+  // 当数组为空或者数组的和为奇数的时候，肯定没法分割为等和的子集，所以直接返回false
+  if (nums.isEmpty() || nums.sum() % 2 != 0) return false
+
+  val halfSum = nums.sum() / 2
+  val dp = BooleanArray(halfSum + 1) { false }
+  // base case
+  dp[0] = true
+
+  for (index in nums.indices) {
+    for (reduceSum in halfSum downTo 0) {
+      // 这里dp[index] = dp[index] 的意义是，选择不加当前这个数
+      // dp[index] = dp[reduceSum - nums[index]] 加了当前这个数正好等于
+      if (reduceSum - nums[index] >= 0) dp[reduceSum] = dp[reduceSum] || dp[reduceSum - nums[index]]
+    }
+  }
+  return dp[halfSum]
 }
 
 
