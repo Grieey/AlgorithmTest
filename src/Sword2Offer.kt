@@ -1,4 +1,5 @@
 import java.util.*
+import kotlin.collections.LinkedHashMap
 
 /**
  * description: 剑指offer的练习题
@@ -497,5 +498,29 @@ private fun verifyPostorder2(postorder: IntArray, start: Int, end: Int): Boolean
   val m = p
   while (postorder[p] > postorder[end]) p++
   return p == end && verifyPostorder2(postorder, start, m - 1) && verifyPostorder2(postorder, m, end - 1)
+}
+
+class Node(var `val`: Int) {
+  var next: Node? = null
+  var random: Node? = null
+}
+
+fun majorityElement(nums: IntArray): Int {
+  var tar = nums.first()
+  var times = 1
+  for (i in 1..nums.lastIndex) {
+    if (nums[i] == tar) {
+      times++
+    } else {
+      times--
+    }
+
+    if (times == 0) {
+      times = 1
+      tar = nums[i]
+    }
+  }
+
+  return tar
 }
 
