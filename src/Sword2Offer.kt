@@ -1,6 +1,4 @@
-import java.lang.Math.pow
 import java.util.*
-import kotlin.math.pow
 
 /**
  * description: 剑指offer的练习题
@@ -18,7 +16,47 @@ fun testOffer() {
 //  array[1] = charArrayOf('c', 'd')
 //  println(exist(array, "abdc"))
 
-  println(movingCount(1, 2, 1))
+//  println(movingCount(1, 2, 1))
+
+//  println(isNumber("-1E-16"))
+
+//  val l1 = ListNode(1)
+//  l1.next = ListNode(2)
+//  l1.next?.next = ListNode(4)
+//
+//  val l2 = ListNode(1)
+//  l2.next = ListNode(3)
+//  l2.next?.next = ListNode(4)
+//
+//  var res = mergeTwoLists(l1, l2)
+//  while (res != null) {
+//    println(res.`val`)
+//    res = res.next
+//  }
+
+  // [10,12,6,8,3,11]
+  // [10,12,6,8]
+//  val a = TreeNode(10)
+//  a.left = TreeNode(12)
+//  a.right = TreeNode(6)
+//  a.left?.left = TreeNode(8)
+//  a.left?.right = TreeNode(3)
+//  a.right?.left = TreeNode(11)
+//
+//  val b = TreeNode(10)
+//  b.left = TreeNode(12)
+//  b.right = TreeNode(6)
+//  b.left?.left = TreeNode(8)
+////  println(isSubStructure(a, b))
+//  preOrder(a)
+//  inOrder(a)
+//  lastOrder(a)
+//  println("前序：$preBuilder ,中序:$inBuilder, 后序：$lastBuilder")
+
+//  val a = spiralOrder(ArraysGet.twos2)
+//  println(a.size)
+
+  println(validateStackSequences(ArraysGet.inStack, ArraysGet.outStack))
 }
 
 /**
@@ -178,3 +216,226 @@ fun myPow(x: Double, n: Int): Double {
 
   return if (n % 2 == 0) myPow(x * x, n / 2) else x * myPow(x * x, n / 2)
 }
+
+/**
+ * 判断是否是数字
+ */
+fun isNumber(s: String): Boolean {
+  if (s.isEmpty()) return false
+  var index = 0
+  val array = "$s|"
+
+  val scanUnsignNumber = {
+    val before = index
+    while (array[index] in '0'..'9') index++
+    index > before
+  }
+
+  val scanNumber = {
+    if (array[index] == '+' || array[index] == '-') index++
+    scanUnsignNumber()
+  }
+
+  while (s[index] == ' ') ++index
+  var numberic = scanNumber()
+
+  if (array[index] == '.') {
+    index++
+    numberic = scanUnsignNumber() || numberic
+  }
+
+  if (array[index] == 'e' || array[index] == 'E') {
+    index++
+    numberic = scanNumber() && numberic
+  }
+
+  while (array[index] == ' ') index++
+
+  return numberic && array[index] == '|'
+}
+
+fun exchange(nums: IntArray): IntArray {
+  return recoder(nums) {
+    it % 2 == 0
+  }
+}
+
+fun recoder(nums: IntArray, block: (n: Int) -> Boolean): IntArray {
+  if (nums.isEmpty()) return intArrayOf()
+
+  var left = 0
+  var right = nums.lastIndex
+  while (left < right) {
+    while (left < right && !block(nums[left])) left++
+    while (left < right && block(nums[right])) right++
+    if (left < right) {
+      val temp = nums[left]
+      nums[left] = nums[right]
+      nums[right] = temp
+    }
+  }
+
+  return nums
+}
+
+fun reverseList(head: ListNode?): ListNode? {
+  var next = head?.next
+  var cur = head
+  cur?.next = null
+  while (next != null) {
+    val tmp = next
+    tmp.next = cur
+    cur = tmp
+
+    next = next.next
+  }
+
+  return cur
+}
+
+fun mergeTwoLists(l1: ListNode?, l2: ListNode?): ListNode? {
+  if (l1 == null) return l2
+  if (l2 == null) return l1
+
+  var cur1 = l1
+  var cur2 = l2
+  var cur3: ListNode? = null
+  if (cur1.`val` < cur2.`val`) {
+    cur3 = ListNode(cur1.`val`)
+    cur1 = cur1.next
+  } else {
+    cur3 = ListNode(cur2.`val`)
+    cur2 = cur2.next
+  }
+
+  val res = cur3
+
+  while (cur1 != null && cur2 != null) {
+    if (cur1.`val` < cur2.`val`) {
+      cur3?.next = ListNode(cur1.`val`)
+      cur3 = cur3?.next
+      cur1 = cur1.next
+    } else {
+      cur3?.next = ListNode(cur2.`val`)
+      cur3 = cur3?.next
+      cur2 = cur2.next
+    }
+  }
+
+  when {
+    cur1 == null -> {
+      cur3?.next = cur2
+    }
+    cur2 == null -> {
+      cur3?.next = cur1
+    }
+  }
+
+  return res
+}
+
+/**
+ * 递归用的出生入化
+ */
+fun isSubStructure(a: TreeNode?, b: TreeNode?): Boolean {
+  return (a != null && b != null) && (recur(a, b) || isSubStructure(a.left, b) || isSubStructure(a.right, b))
+}
+
+private fun recur(a: TreeNode?, b: TreeNode?): Boolean {
+  if (b == null) return true
+  if (a == null || a.`val` != b.`val`) return false
+  return recur(a.left, b) && recur(a.right, b)
+}
+
+val preBuilder = StringBuilder()
+fun preOrder(a: TreeNode?) {
+  if (a == null) {
+    preBuilder.append("#").append(",")
+    return
+  }
+
+  preBuilder.append(a.`val`).append(",")
+  preOrder(a.left)
+  preOrder(a.right)
+}
+
+val inBuilder = StringBuilder()
+fun inOrder(a: TreeNode?) {
+  if (a == null) {
+    inBuilder.append("#").append(",")
+    return
+  }
+
+  inOrder(a.left)
+  inBuilder.append(a.`val`).append(",")
+  inOrder(a.right)
+}
+
+val lastBuilder = StringBuilder()
+fun lastOrder(a: TreeNode?) {
+  if (a == null) {
+    lastBuilder.append("#").append(",")
+    return
+  }
+
+  lastOrder(a.left)
+  lastOrder(a.right)
+  lastBuilder.append(a.`val`).append(",")
+}
+
+fun isSymmetric(root: TreeNode?): Boolean {
+  mutableListOf<Int>()
+  return isSymmetric(root, root)
+}
+
+fun isSymmetric(a: TreeNode?, b: TreeNode?): Boolean {
+  if (a == null && b == null) return true
+  if (a == null || b == null) return false
+  if (a.`val` != b.`val`) return false
+  return isSymmetric(a.left, b.right) && isSymmetric(a.right, b.left)
+}
+
+fun spiralOrder(matrix: Array<IntArray>): IntArray {
+  if (matrix.isEmpty() || matrix[0].isEmpty()) return intArrayOf()
+
+  var left = 0
+  var right = matrix[0].lastIndex
+  var top = 0
+  var bottom = matrix.lastIndex
+  val array = IntArray((right + 1) * (bottom + 1))
+  var start = 0
+
+  while (true) {
+    for (i in left..right) array[start++] = matrix[top][i]
+    if (++top > bottom) break
+
+    for (i in top..bottom) array[start++] = matrix[i][right]
+    if (--right < left) break
+
+    for (i in right downTo left) array[start++] = matrix[bottom][i]
+    if (--bottom < top) break
+
+    for (i in bottom downTo top) array[start++] = matrix[i][left]
+    if (++left > right) break
+  }
+
+  return array
+}
+
+fun validateStackSequences(pushed: IntArray, popped: IntArray): Boolean {
+  if (pushed.isEmpty() || popped.isEmpty() || pushed.size != popped.size) return true
+  val inStack = Stack<Int>()
+
+  var outIndex = 0
+  for (i in pushed.indices) {
+    inStack.push(pushed[i])
+    while (!inStack.isEmpty() && inStack.peek() == popped[outIndex]) {
+      inStack.pop()
+      outIndex++
+    }
+  }
+
+
+  return inStack.isEmpty()
+}
+
