@@ -36,27 +36,28 @@ fun testOffer() {
 
   // [10,12,6,8,3,11]
   // [10,12,6,8]
-//  val a = TreeNode(10)
-//  a.left = TreeNode(12)
-//  a.right = TreeNode(6)
-//  a.left?.left = TreeNode(8)
-//  a.left?.right = TreeNode(3)
-//  a.right?.left = TreeNode(11)
-//
-//  val b = TreeNode(10)
-//  b.left = TreeNode(12)
-//  b.right = TreeNode(6)
-//  b.left?.left = TreeNode(8)
-////  println(isSubStructure(a, b))
-//  preOrder(a)
-//  inOrder(a)
-//  lastOrder(a)
-//  println("前序：$preBuilder ,中序:$inBuilder, 后序：$lastBuilder")
+  val a = TreeNode(10)
+  a.left = TreeNode(12)
+  a.right = TreeNode(6)
+  a.left?.left = TreeNode(8)
+  a.left?.right = TreeNode(3)
+  a.right?.left = TreeNode(11)
+
+
+  val b = TreeNode(10)
+  b.left = TreeNode(12)
+  b.right = TreeNode(6)
+  b.left?.left = TreeNode(8)
+//  println(isSubStructure(a, b))
+  preOrder(a)
+  inOrder(a)
+  lastOrder(a)
+  println("前序：$preBuilder ,中序:$inBuilder, 后序：$lastBuilder")
 
 //  val a = spiralOrder(ArraysGet.twos2)
 //  println(a.size)
 
-  println(validateStackSequences(ArraysGet.inStack, ArraysGet.outStack))
+//  println(validateStackSequences(ArraysGet.inStack, ArraysGet.outStack))
 }
 
 /**
@@ -437,5 +438,64 @@ fun validateStackSequences(pushed: IntArray, popped: IntArray): Boolean {
 
 
   return inStack.isEmpty()
+}
+
+fun levelOrder(root: TreeNode?): IntArray {
+  if (root == null) return intArrayOf()
+  val list = mutableListOf<Int>()
+  val queue = LinkedList<TreeNode>()
+  while (queue.isNotEmpty()) {
+    val node = queue.poll()
+    list.add(node.`val`)
+    if (node.left != null) queue.offer(node.left)
+    if (node.right != null) queue.offer(node.right)
+  }
+
+  return list.toIntArray()
+}
+
+fun levelOrder2(root: TreeNode?): List<List<Int>> {
+  if (root == null) return emptyList()
+  val list = LinkedHashMap<Int, MutableList<Int>>()
+  val queue = LinkedList<TreeNode>()
+  queue.offer(root)
+  var death = 1
+
+  while (queue.isNotEmpty()) {
+    for (i in queue.indices) {
+      val node = queue.poll()
+      if (list[death] == null) {
+        list[death] = mutableListOf(node.`val`)
+      } else {
+        list[death]?.add(node.`val`)
+      }
+
+      if (node.left != null) queue.offer(node.left)
+      if (node.right != null) queue.offer(node.right)
+    }
+
+    death++
+  }
+
+  val res = mutableListOf<List<Int>>()
+
+  list.forEach {
+    res.add(it.value.toList())
+  }
+
+  return res.toList()
+}
+
+fun verifyPostorder(postorder: IntArray): Boolean {
+  return verifyPostorder2(postorder, 0, postorder.lastIndex)
+}
+
+private fun verifyPostorder2(postorder: IntArray, start: Int, end: Int): Boolean {
+  if (start >= end) return true
+  var p = start
+  while (postorder[p] < postorder[end]) p++
+  val m = p
+  while (postorder[p] > postorder[end]) p++
+  return p == end && verifyPostorder2(postorder, start, m - 1) && verifyPostorder2(postorder, m, end - 1)
 }
 
