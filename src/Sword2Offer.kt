@@ -508,6 +508,7 @@ class Node(var `val`: Int) {
 fun majorityElement(nums: IntArray): Int {
   var tar = nums.first()
   var times = 1
+  // 解决思路是，依次判断出现数字的重复次数，当tar与下一个数一样的时候，就加一，不一样就减一，这样最后一个一定是出现次数最多的那个数
   for (i in 1..nums.lastIndex) {
     if (nums[i] == tar) {
       times++
@@ -524,3 +525,18 @@ fun majorityElement(nums: IntArray): Int {
   return tar
 }
 
+fun maxSubArray(nums: IntArray): Int {
+  if (nums.size == 1) return nums.first()
+  var dp0 = nums[0]
+  var dp1 = 0
+  var res = dp0
+  // dpi的意义是，以index为i的数组成的数组的最大和
+  for (i in 1..nums.lastIndex) {
+    // 这里做出选择，是以当前nums[i]作为最大和还是和前面dp0结合组成最大和
+    dp1 = Math.max(nums[i], nums[i] + dp0)
+    dp0 = dp1
+    res = Math.max(res, dp1)
+  }
+
+  return res
+}
