@@ -75,8 +75,12 @@ fun testOffer() {
 //  println(search2(intArrayOf(2, 2), 2))
 
 //  println(missingNumber(intArrayOf(0, 1, 2)))
-  println(missingNumber(intArrayOf(0)))
+//  println(missingNumber(intArrayOf(0)))
+
+//  println(singleNumber(ArraysGet.threeTimesNum))
+
 }
+
 
 /**
  * 找出数组中重复的数字。
@@ -720,4 +724,42 @@ fun missingNumber(nums: IntArray): Int {
   }
 
   return left
+}
+
+fun isBalanced(root: TreeNode?): Boolean {
+  if (root == null) return true
+  val left = getDeathOfTree(root.left)
+  val right = getDeathOfTree(root.right)
+  return left != -1 && right != -1 && Math.abs(left - right) <= 1
+}
+
+private fun getDeathOfTree(root: TreeNode?): Int {
+  if (root == null) return 0
+
+  val left = getDeathOfTree(root.left)
+  if (left == -1) return left
+  val right = getDeathOfTree(root.right)
+  if (right == -1) return right
+
+  return if (Math.abs(left - right) <= 1) Math.max(left, right) + 1 else -1
+}
+
+
+fun singleNumber(nums: IntArray): Int {
+  var ones = 0
+  var twos = 0
+  nums.forEach { num ->
+    ones = ones xor num and twos.inv()
+    twos = twos xor num and ones.inv()
+  }
+  return ones
+}
+
+fun reverseLeftWords(s: String, n: Int): String {
+  val builder = StringBuilder()
+  for (i in n until n + s.length) {
+    builder.append(s[i % s.length])
+  }
+
+  return builder.toString()
 }

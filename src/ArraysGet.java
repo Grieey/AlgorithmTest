@@ -11,6 +11,7 @@ class ArraysGet {
       new int[][] { { 1, 2, 3, 4 }, { 5, 6, 7, 8 }, { 9, 10, 11, 12 } };
   public static int[] outStack = new int[] { 5, 4, 3, 2, 1 };
   public static int[] inStack = new int[] { 1, 2, 3, 4, 5 };
+  public static int[] threeTimesNum = new int[] { 3, 4, 3, 3 };
 
   public static int[][] largeTwos = new int[][] {
       { 3, 8, 6, 0, 5, 9, 9, 6, 3, 4, 0, 5, 7, 3, 9, 3 },
