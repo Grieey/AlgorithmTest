@@ -67,4 +67,14 @@ class Sword2OfferWithJava {
 
     dfs(cur.getRight());
   }
+
+  public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    ListNode fast = headA;
+    ListNode slow = headB;
+    while (fast != slow) {
+      fast = fast != null ? fast.getNext() : headB;
+      slow = slow != null ? slow.getNext() : headA;
+    }
+    return fast;
+  }
 }

@@ -37,28 +37,45 @@ fun testOffer() {
 
   // [10,12,6,8,3,11]
   // [10,12,6,8]
-  val a = TreeNode(10)
-  a.left = TreeNode(12)
-  a.right = TreeNode(6)
-  a.left?.left = TreeNode(8)
-  a.left?.right = TreeNode(3)
-  a.right?.left = TreeNode(11)
-
-
-  val b = TreeNode(10)
-  b.left = TreeNode(12)
-  b.right = TreeNode(6)
-  b.left?.left = TreeNode(8)
+//  val a = TreeNode(10)
+//  a.left = TreeNode(12)
+//  a.right = TreeNode(6)
+//  a.left?.left = TreeNode(8)
+//  a.left?.right = TreeNode(3)
+//  a.right?.left = TreeNode(11)
+//
+//
+//  val b = TreeNode(10)
+//  b.left = TreeNode(12)
+//  b.right = TreeNode(6)
+//  b.left?.left = TreeNode(8)
 //  println(isSubStructure(a, b))
-  preOrder(a)
-  inOrder(a)
-  lastOrder(a)
-  println("前序：$preBuilder ,中序:$inBuilder, 后序：$lastBuilder")
+//  preOrder(a)
+//  inOrder(a)
+//  lastOrder(a)
+//  println("前序：$preBuilder ,中序:$inBuilder, 后序：$lastBuilder")
 
 //  val a = spiralOrder(ArraysGet.twos2)
 //  println(a.size)
 
 //  println(validateStackSequences(ArraysGet.inStack, ArraysGet.outStack))
+
+//  println(translateNum(25))
+
+//  println(maxValue(ArraysGet.twos))
+//  println(maxValue(ArraysGet.largeTwos))
+
+//  println(firstUniqChar("leetcode"))
+
+//  println(search(intArrayOf(1), 1))
+//  println(search(intArrayOf(2, 2), 2))
+//
+//
+//  println(search2(intArrayOf(1), 1))
+//  println(search2(intArrayOf(2, 2), 2))
+
+//  println(missingNumber(intArrayOf(0, 1, 2)))
+  println(missingNumber(intArrayOf(0)))
 }
 
 /**
@@ -539,4 +556,168 @@ fun maxSubArray(nums: IntArray): Int {
   }
 
   return res
+}
+
+fun findNthDigit(n: Int): Int {
+  var digit = 1
+  var start = 1L
+  var count = 9L
+  var cur = n
+  while (cur > count) { // 1.
+    cur = (cur - count).toInt()
+    digit += 1
+    start *= 10
+    count = digit * start * 9
+  }
+  val num = start + (n - 1) / digit // 2.
+  return num.toString()[(n - 1) % digit] - '0' // 3.
+}
+
+fun minNumber(nums: IntArray): String {
+  if (nums.size == 1) return nums.first().toString()
+
+  val strArray = Array(nums.size) { "" }
+  for (i in nums.indices) {
+    strArray[i] = nums[i].toString()
+  }
+
+  strArray.sortWith(Comparator { x, y -> "$x$y".compareTo("$y$x") })
+  val builder = StringBuffer()
+  strArray.forEach {
+    builder.append(it)
+  }
+  return builder.toString()
+}
+
+fun translateNum(num: Int): Int {
+  if (num < 10) return 1
+  var dp0 = 1
+  var dp1 = 1
+  val numStr = num.toString()
+  for (i in 2..numStr.length) {
+    val tmp = numStr.substring(i - 2, i)
+    val cur = if (tmp in "10".."25") dp0 + dp1 else dp1
+    dp0 = dp1
+    dp1 = cur
+  }
+
+  return dp1
+}
+
+fun maxValue(grid: Array<IntArray>): Int {
+  val m = grid.size
+  val n = grid.first().size
+  for (i in 1 until m) {
+    grid[i][0] += grid[i - 1][0]
+  }
+
+  for (j in 1 until n) {
+    grid[0][j] += grid[0][j - 1]
+  }
+
+  for (i in 1 until m) for (j in 1 until n) {
+    grid[i][j] += Math.max(grid[i - 1][j], grid[i][j - 1])
+  }
+
+  return grid[m - 1][n - 1]
+}
+
+fun nthUglyNumber(n: Int): Int {
+  var a = 0
+  var b = 0
+  var c = 0
+  val dp = IntArray(n) { 0 }
+  dp[0] = 1
+  for (i in 1 until n) {
+    val n2 = dp[a] * 2
+    val n3 = dp[b] * 3
+    val n5 = dp[c] * 5
+    dp[i] = Math.min(Math.min(n2, n3), n5)
+    if (dp[i] == n2) a++
+    if (dp[i] == n3) b++
+    if (dp[i] == n5) c++
+  }
+
+  return dp[n - 1]
+}
+
+fun firstUniqChar(s: String): Char {
+
+  val hash = LinkedHashMap<Char, Boolean>()
+
+  for (i in 0..s.lastIndex) {
+    hash[s[i]] = hash[s[i]] == null
+  }
+  for ((c, isDum) in hash) {
+    if (isDum) {
+      return c
+    }
+  }
+
+  return ' '
+}
+
+fun search(nums: IntArray, target: Int): Int {
+  if (nums.isEmpty()) return 0
+
+  var left = 0
+  var right = nums.lastIndex
+  var targetIndex = -1
+  while (left <= right && targetIndex == -1) {
+    val mid = left + (right - left) / 2
+    when {
+      nums[mid] > target -> right = mid - 1
+      nums[mid] < target -> left = mid + 1
+      else -> {
+        targetIndex = mid
+      }
+    }
+  }
+
+  if (targetIndex == -1) return 0
+
+  left = targetIndex
+  right = targetIndex
+  var times = 1
+  if (targetIndex != 0) {
+    while (left - 1 >= 0 && nums[--left] == target) times++
+  }
+
+  if (targetIndex != nums.lastIndex) {
+    while (right + 1 <= nums.lastIndex && nums[++right] == target) times++
+  }
+
+
+  return times
+}
+
+fun search2(nums: IntArray, target: Int): Int {
+  // 例如 2，4，5，5，5，8, 只需要寻找4的右边界和5的右边界，两个相减就是5重复的次数
+  return searchRight(nums, target) - searchRight(nums, target - 1)
+}
+
+private fun searchRight(nums: IntArray, target: Int): Int {
+  var left = 0
+  var right = nums.lastIndex
+  while (left <= right) {
+    val mid = (left + right) / 2
+    when {
+      nums[mid] > target -> right = mid - 1
+      nums[mid] < target -> left = mid + 1
+      else -> left = mid + 1
+    }
+  }
+  return left
+}
+
+fun missingNumber(nums: IntArray): Int {
+  var left = 0
+  var right = nums.lastIndex
+
+  while (left <= right) {
+    val mid = (right + left) / 2
+    if (nums[mid] != mid) right = mid - 1 else left = mid + 1
+  }
+
+  return left
 }
