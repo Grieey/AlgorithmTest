@@ -763,3 +763,42 @@ fun reverseLeftWords(s: String, n: Int): String {
 
   return builder.toString()
 }
+
+/**
+ * 这个题的思路是，
+ * 使用双端队列，先将k个数内的数据按照大小放到队列中，队头是最大的，然后其次
+ * 在形成一个窗口了开始遍历，如果是头部正好是当前
+ */
+fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+  val queue = LinkedList<Int>()
+  val res = IntArray(nums.size - k + 1)
+  for (i in 0 until k) {
+    while (queue.isNotEmpty() && queue.peekLast() < nums[i]) queue.removeLast()
+    queue.addLast(nums[i])
+  }
+
+  res[0] = queue.peekFirst()
+  for (i in k..nums.lastIndex) {
+    if (queue.peekFirst() == nums[i - k]) queue.removeFirst()
+    while (queue.isNotEmpty() && queue.peekLast() < nums[i]) queue.removeLast()
+    queue.addLast(nums[i])
+    res[i - k + 1] = queue.peekFirst()
+  }
+
+  return res
+}
+
+fun dicesProbability(n: Int): DoubleArray {
+  var pre = DoubleArray(6) { 1 / 6.0 }
+
+  for (i in 2..n) {
+    val tmp = DoubleArray(5 * i + 1)
+    for (j in 0..pre.lastIndex) for (x in 0 until 6) {
+      tmp[j + x] += pre[j] / 6
+    }
+
+    pre = tmp
+  }
+
+  return pre
+}
