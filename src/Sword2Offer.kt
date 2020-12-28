@@ -1,5 +1,6 @@
 import java.util.*
 import kotlin.collections.LinkedHashMap
+import kotlin.time.TestClock
 
 /**
  * description: 剑指offer的练习题
@@ -802,3 +803,113 @@ fun dicesProbability(n: Int): DoubleArray {
 
   return pre
 }
+
+fun lastRemaining(n: Int, m: Int): Int {
+  var f = 0
+  var i = 1
+  while (i != n + 1) {
+    f = (f + m) % i
+    i++
+  }
+  return f
+}
+
+var sum = 0
+
+/**
+ * 这个题要求不能使用减乘除和条件及循环语句
+ * 使用&& 来规避判断很牛逼
+ */
+fun sumNums(n: Int): Int {
+  val x = n > 1 && sumNums(n - 1) > 0
+  sum += n
+  return sum
+}
+
+fun constructArr(a: IntArray): IntArray {
+  if (a.isEmpty()) return intArrayOf()
+
+  val b = IntArray(a.size)
+  var tmp = 1
+  b[0] = 1
+
+  for (i in 1..a.lastIndex) {
+    b[i] = a[i - 1] * b[i - 1]
+  }
+
+  for (i in a.lastIndex - 1 downTo 0) {
+    tmp *= a[i + 1]
+    b[i] *= tmp
+  }
+
+  return b
+}
+
+fun bubble(nums: IntArray): IntArray {
+  if (nums.isEmpty()) return nums
+
+  for (i in nums.indices) for (j in 0 until nums.lastIndex - i) {
+    if (nums[j + 1] < nums[j]) {
+      val tmp = nums[j + 1]
+      nums[j + 1] = nums[j]
+      nums[j] = tmp
+    }
+  }
+
+  return nums
+}
+
+fun selectedSort(nums: IntArray): IntArray {
+  if (nums.isEmpty()) return nums
+
+  for (i in nums.indices) for (j in i + 1..nums.lastIndex) {
+    if (nums[j] < nums[i]) {
+      val tmp = nums[j]
+      nums[j] = nums[i]
+      nums[i] = tmp
+    }
+  }
+  return nums
+}
+
+fun mergeSort(nums: IntArray): IntArray {
+  return divide(nums, 0, nums.lastIndex)
+}
+
+private fun divide(nums: IntArray, lo: Int, hi: Int): IntArray {
+  if (lo >= hi) return intArrayOf()
+
+  val mid = lo + (hi - lo) / 2
+
+  // 将左边的排序
+  divide(nums, lo, mid)
+  // 将右边的排序
+  divide(nums, mid + 1, hi)
+
+  // 将排好序的数组组在一起
+  return merge(nums, lo, hi, mid)
+}
+
+
+private fun merge(nums: IntArray, lo: Int, hi: Int, mid: Int): IntArray {
+  val copy = nums.copyOf()
+
+  var index = lo
+  var leftIndex = lo
+  var rightIndex = mid + 1
+
+  while (index <= hi) {
+    when {
+      // 合并时，左边界的起点已经大于了中位，说明左边已经排序好了，直接开始复制右边的
+      leftIndex > mid -> nums[index++] = copy[rightIndex++]
+      // 合并时，右边已经大于了末尾，说明右边已经排序好了，直接复制左边的
+      rightIndex > hi -> nums[index++] = copy[leftIndex++]
+      // 左边的值小于右边的, 先排序右边值的到该位置，否则就是左边的值
+      nums[leftIndex] > nums[rightIndex] -> nums[index++] = copy[rightIndex++]
+      else -> nums[index++] = copy[leftIndex++]
+    }
+  }
+
+  return nums
+}
+
