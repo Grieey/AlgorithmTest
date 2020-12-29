@@ -1,6 +1,7 @@
+import jdk.nashorn.internal.runtime.PropertyHashMap
 import java.util.*
 import kotlin.collections.LinkedHashMap
-import kotlin.time.TestClock
+import kotlin.random.Random
 
 /**
  * description: 剑指offer的练习题
@@ -849,11 +850,7 @@ fun bubble(nums: IntArray): IntArray {
   if (nums.isEmpty()) return nums
 
   for (i in nums.indices) for (j in 0 until nums.lastIndex - i) {
-    if (nums[j + 1] < nums[j]) {
-      val tmp = nums[j + 1]
-      nums[j + 1] = nums[j]
-      nums[j] = tmp
-    }
+    if (nums[j + 1] < nums[j]) nums.swap(j + 1, j)
   }
 
   return nums
@@ -863,11 +860,7 @@ fun selectedSort(nums: IntArray): IntArray {
   if (nums.isEmpty()) return nums
 
   for (i in nums.indices) for (j in i + 1..nums.lastIndex) {
-    if (nums[j] < nums[i]) {
-      val tmp = nums[j]
-      nums[j] = nums[i]
-      nums[i] = tmp
-    }
+    if (nums[j] < nums[i]) nums.swap(i, j)
   }
   return nums
 }
@@ -895,7 +888,9 @@ private fun merge(nums: IntArray, lo: Int, hi: Int, mid: Int): IntArray {
   val copy = nums.copyOf()
 
   var index = lo
+  // 左边起始位置
   var leftIndex = lo
+  // 右边起始位置
   var rightIndex = mid + 1
 
   while (index <= hi) {
@@ -913,3 +908,69 @@ private fun merge(nums: IntArray, lo: Int, hi: Int, mid: Int): IntArray {
   return nums
 }
 
+/**
+ * 快速排序，时间复杂度为O(nlogn)
+ *          空间复杂度为O(1)
+ */
+fun quickSort(nums: IntArray, lo: Int, hi: Int): IntArray {
+  if (lo >= hi) return intArrayOf()
+  // 选择有一个随机基点，分割数组，分别对基点的两边进行排序
+  val p = partition(nums, lo, hi)
+
+  quickSort(nums, lo, p)
+  quickSort(nums, p + 1, hi)
+
+  return nums
+}
+
+fun partition(nums: IntArray, lo: Int, hi: Int): Int {
+  // 将随机点的值和hi对应的值交互，便于下面遍历
+  nums.swap(Random.nextInt(lo, hi), hi)
+
+  // 基点最终的位置
+  var targetIndex = lo
+  for (i in lo until hi) {
+
+    // i的值小于基点值时，将该值交互到target左边
+    if (nums[i] <= nums[hi]) {
+      nums.swap(targetIndex++, i)
+    }
+  }
+
+  // 最后将基点值和targetIndex交换, 这样在基点左边的值都小于基点，基点右边的值都大于基点
+  nums.swap(targetIndex, hi)
+
+  return targetIndex
+}
+
+fun IntArray.swap(index1: Int, index2: Int) {
+  val tmp = this[index1]
+  this[index1] = this[index2]
+  this[index2] = tmp
+}
+
+fun findKthLargest(nums: IntArray, k: Int): Int {
+  var left = 0
+  var right = nums.lastIndex
+  val target = nums.size - k
+  while (true) {
+    val p = partition(nums, left, right)
+    when {
+      p > target -> right = p - 1
+      p < target -> left = p + 1
+      else -> return nums[target]
+    }
+  }
+}
+
+fun findKthLargestWithPriorityQueue(nums: IntArray, k: Int): Int {
+  val p = PriorityQueue<Int>()
+  for (i in nums.indices) {
+    p.add(nums[i])
+    if (p.size > k) {
+      p.poll()
+    }
+  }
+
+  return p.peek()
+}
