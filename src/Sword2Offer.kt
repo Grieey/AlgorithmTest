@@ -974,3 +974,64 @@ fun findKthLargestWithPriorityQueue(nums: IntArray, k: Int): Int {
 
   return p.peek()
 }
+
+fun checkPermutation(s1: String, s2: String): Boolean {
+  if (s1.length != s2.length) return false
+
+  val map1 = HashMap<Char, Int>()
+  val map2 = HashMap<Char, Int>()
+
+  s1.forEach {
+    map1[it] = map2.getOrDefault(it, 0) + 1
+  }
+
+  s2.forEach {
+    map2[it] = map2.getOrDefault(it, 0) + 1
+    if ((map1[it] ?: 0 > map2[it] ?: 0) || map1[it] == null || map2[it] == null) return false
+  }
+
+  return true
+}
+
+fun setZeroes(matrix: Array<IntArray>): Unit {
+  if (matrix.isEmpty() || matrix.first().isEmpty()) return
+
+  var isCol1Zero = false
+  var isRow1Zero = false
+
+  // 判断首列是否存在0
+  for (i in matrix.indices) {
+    if (matrix[i][0] == 0) isRow1Zero = true
+  }
+
+  // 判断首行是否存在0
+  for (i in matrix.first().indices) {
+    if (matrix[0][i] == 0) isCol1Zero = true
+  }
+
+  // 从1列1行开始遍历，如果存在0，将首行首列置为0
+  for (i in 1..matrix.lastIndex) for (j in 1..matrix.first().lastIndex) {
+    if (matrix[i][j] == 0) {
+      matrix[i][0] = 0
+      matrix[0][j] = 0
+    }
+  }
+
+  // 根据首行首列是否为0来将整行整列置为0
+  for (i in 1..matrix.lastIndex) for (j in 1..matrix.first().lastIndex) {
+    if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+      matrix[i][j] = 0
+    }
+  }
+
+  // 如果首列存在0，首列置为0
+  for (i in matrix.indices) {
+    if (isRow1Zero) matrix[i][0] = 0
+  }
+
+  // 如果首行存在0，首行置为0
+  for (i in matrix.first().indices) {
+    if (isCol1Zero) matrix[0][i] = 0
+  }
+
+}
