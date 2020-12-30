@@ -1035,3 +1035,12 @@ fun setZeroes(matrix: Array<IntArray>): Unit {
   }
 
 }
+
+
+/**
+ * 这个题的思路太牛逼了, 题目要求是否是翻转的字符串
+ */
+fun isFlipedString(s1: String, s2: String): Boolean {
+  if (s1.length != s2.length) return false
+  return "${s2}${s2}".contains(s1)
+}
