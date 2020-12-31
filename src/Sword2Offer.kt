@@ -1044,3 +1044,45 @@ fun isFlipedString(s1: String, s2: String): Boolean {
   if (s1.length != s2.length) return false
   return "${s2}${s2}".contains(s1)
 }
+
+fun removeDuplicateNodes(head: ListNode?): ListNode? {
+  if (head == null) return null
+
+  var prev = head
+  var next = head.next
+  val exist = HashSet<Int>()
+  exist.add(prev.`val`)
+  while (prev != null && next != null) {
+    while (next != null && !exist.add(next.`val`)) next = next.next
+
+    prev.next = next
+    prev = prev.next
+  }
+
+  return prev
+}
+
+/**
+ * 很简洁的写法
+ */
+fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode? {
+  val head = ListNode(0)
+  var prev = head
+  var carry = 0
+
+  var p1 = l1
+  var p2 = l2
+
+  while (p1 != null || p2 != null || carry != 0) {
+    val sum = ((p1?.`val` ?: 0) + (p2?.`val` ?: 0) + carry)
+    carry = sum / 10
+    prev.next = ListNode(sum % 10)
+
+    prev = prev.next!!
+
+    p1 = if (p1 != null) p1.next else p1
+    p2 = if (p2 != null) p2.next else p2
+  }
+
+  return head.next
+}

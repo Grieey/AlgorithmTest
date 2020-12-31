@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 /**
  * description: Java代码
  *
@@ -76,5 +78,14 @@ class Sword2OfferWithJava {
       slow = slow != null ? slow.getNext() : headA;
     }
     return fast;
+  }
+
+  /**
+   * 只能访问链表中的某个节点，然后删除他，非头尾节点
+   * 这个思路很清晰简洁
+   */
+  public void deleteNode(ListNode node) {
+    node.setVal(Objects.requireNonNull(node.getNext()).getVal());
+    node.setNext(node.getNext().getNext());
   }
 }

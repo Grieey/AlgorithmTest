@@ -20,5 +20,15 @@ fun main(args: Array<String>) {
 //  val a2 = findKthLargestWithPriorityQueue(intArrayOf(3, 2, 3, 1, 2, 4, 5, 5, 6), 2)
 //  println(a.size)
 
-  println(checkPermutation("abb", "aab"))
+//  println(checkPermutation("abb", "aab"))
+
+  val l1 = ListNode(3)
+  l1.next = ListNode(7)
+//  l1.next?.next = ListNode(3)
+  val l2 = ListNode(9)
+  l2.next = ListNode(2)
+//  l2.next?.next = ListNode(3)
+
+  val res = addTwoNumbers(l1, l2)
+  println(res?.`val`)
 }
