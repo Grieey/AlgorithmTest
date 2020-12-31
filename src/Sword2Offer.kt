@@ -1086,3 +1086,26 @@ fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode? {
 
   return head.next
 }
+
+/**
+ * 这里用一个数组辅助，所以时间复杂度O(n)，空间复杂度也是O(n)
+ * 空间复杂度的O(1)写法如下：
+ * 使用快慢指针，fast和slow， fast一次走两步，slow一次走一步，fast到达尾部时，slow在链表中间
+ * 然后以slow为起点，翻转后半边的链表
+ * 再从头到中部和中部到尾部的翻转链表比较，一样就是回文
+ * 最后记得将尾部链表复原
+ */
+fun isPalindrome(head: ListNode?): Boolean {
+  var node = head
+  val list = mutableListOf<Int>()
+  while (node != null) {
+    list.add(node.`val`)
+    node = node.next
+  }
+
+  for (i in list.indices) {
+    if (list[i] != list[list.lastIndex - i]) return false
+  }
+
+  return true
+}
