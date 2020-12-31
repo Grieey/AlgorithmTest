@@ -70,6 +70,15 @@ class Sword2OfferWithJava {
     dfs(cur.getRight());
   }
 
+  /**
+   * 这道题的解法，经典，
+   * 相交的情况，因为有焦点，所以fast和slow最终会指向同一个点，那就是焦点
+   * 不相交的情况，那就是fast和slow都走了链表1+链表2的长度，路程一样，最后同时指向null，退出循环
+   * 所以返回值fast不是null就是焦点
+   * @param headA
+   * @param headB
+   * @return
+   */
   public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     ListNode fast = headA;
     ListNode slow = headB;
