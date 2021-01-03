@@ -1109,3 +1109,37 @@ fun isPalindrome(head: ListNode?): Boolean {
 
   return true
 }
+
+/**
+ * 利用一个数组完成三个栈的类
+ * 思路是使用一个数组，size * 3 来存储数据
+ * 例如：size == 2时，数组下标为0，1，2，3，4，5，此时0，3存储stack1的数据， 1，4，存储stack2 的数据
+ */
+class TripleInOne(val stackSize: Int) {
+
+  private val array = IntArray(stackSize * 3)
+
+  /** 各个栈的top坐标 */
+  private val top = IntArray(3) { it }
+
+  fun isEmpty(stackNum: Int): Boolean = top[stackNum] - 3 < 0
+
+  fun push(stackNum: Int, value: Int) {
+    if (top[stackNum] < array.size) {
+      array[top[stackNum]] = value
+      top[stackNum] = top[stackNum] + 3
+    }
+  }
+
+  fun pop(stackNum: Int): Int {
+    if (isEmpty(stackNum)) return -1
+
+    top[stackNum] = top[stackNum] - 3
+    return array[top[stackNum]]
+  }
+
+  fun peek(stackNum: Int): Int {
+    if (isEmpty(stackNum)) return -1
+    return array[top[stackNum] - 3]
+  }
+}
