@@ -1178,11 +1178,11 @@ fun findWhetherExistsPath(n: Int, graph: Array<IntArray>, start: Int, target: In
   queue.offer(start)
   visited.add(start)
 
-  while (queue.isNotEmpty()){
+  while (queue.isNotEmpty()) {
     val node = queue.poll()
     if (node == target) return true
 
-    for (p in graph){
+    for (p in graph) {
       if (p[0] == node
         && !queue.contains(p[1])
         && !visited.contains(p[1])) {
@@ -1193,4 +1193,37 @@ fun findWhetherExistsPath(n: Int, graph: Array<IntArray>, start: Int, target: In
   }
 
   return false
+}
+
+fun listOfDepth(tree: TreeNode?): Array<ListNode?> {
+  if (tree == null) return arrayOf<ListNode?>()
+  val res = LinkedList<ListNode>()
+  val queue = LinkedList<TreeNode>()
+  val dummy = ListNode(0)
+  queue.offer(tree)
+  res.add(ListNode(tree.`val`))
+  while (queue.isNotEmpty()) {
+    var cur = dummy
+    for (i in queue.indices) {
+      val node = queue.poll()
+
+      if (node.left != null) {
+        queue.offer(node.left)
+        cur.next = ListNode(node.left?.`val` ?: 0)
+        cur = cur.next!!
+      }
+      if (node.right != null) {
+        queue.offer(node.right)
+        cur.next = ListNode(node.right?.`val` ?: 0)
+        cur = cur.next!!
+      }
+    }
+
+    if (dummy.next != null) {
+      res.add(dummy.next!!)
+      dummy.next = null
+    }
+  }
+
+  return res.toTypedArray()
 }
