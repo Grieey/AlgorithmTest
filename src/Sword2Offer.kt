@@ -1170,3 +1170,27 @@ class MinStack() {
   }
 
 }
+
+fun findWhetherExistsPath(n: Int, graph: Array<IntArray>, start: Int, target: Int): Boolean {
+  if (n == 0) return false
+  val queue = LinkedList<Int>()
+  val visited = HashSet<Int>()
+  queue.offer(start)
+  visited.add(start)
+
+  while (queue.isNotEmpty()){
+    val node = queue.poll()
+    if (node == target) return true
+
+    for (p in graph){
+      if (p[0] == node
+        && !queue.contains(p[1])
+        && !visited.contains(p[1])) {
+        queue.offer(p[1])
+        visited.add(p[1])
+      }
+    }
+  }
+
+  return false
+}

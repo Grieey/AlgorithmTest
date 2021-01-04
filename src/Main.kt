@@ -1,3 +1,5 @@
+import ArraysGet.graph1
+
 /**
  * description: 练习算法的项目
  * @date: 2020/10/17 08:30
@@ -32,12 +34,14 @@ fun main(args: Array<String>) {
 //  val res = addTwoNumbers(l1, l2)
 //  println(res?.`val`)
 
-  val minStack = MinStack()
-  minStack.push(-2)
-  minStack.push(0)
-  minStack.push(-3)
-  println(minStack.getMin())
-  minStack.pop()
-  println(minStack.top())
-  println(minStack.getMin())
+//  val minStack = MinStack()
+//  minStack.push(-2)
+//  minStack.push(0)
+//  minStack.push(-3)
+//  println(minStack.getMin())
+//  minStack.pop()
+//  println(minStack.top())
+//  println(minStack.getMin())
+
+  println(findWhetherExistsPath(3, graph1, 0, 2))
 }
