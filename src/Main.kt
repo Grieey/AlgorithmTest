@@ -21,14 +21,23 @@ fun main(args: Array<String>) {
 //  println(a.size)
 
 //  println(checkPermutation("abb", "aab"))
+//
+//  val l1 = ListNode(3)
+//  l1.next = ListNode(7)
+////  l1.next?.next = ListNode(3)
+//  val l2 = ListNode(9)
+//  l2.next = ListNode(2)
+////  l2.next?.next = ListNode(3)
+//
+//  val res = addTwoNumbers(l1, l2)
+//  println(res?.`val`)
 
-  val l1 = ListNode(3)
-  l1.next = ListNode(7)
-//  l1.next?.next = ListNode(3)
-  val l2 = ListNode(9)
-  l2.next = ListNode(2)
-//  l2.next?.next = ListNode(3)
-
-  val res = addTwoNumbers(l1, l2)
-  println(res?.`val`)
+  val minStack = MinStack()
+  minStack.push(-2)
+  minStack.push(0)
+  minStack.push(-3)
+  println(minStack.getMin())
+  minStack.pop()
+  println(minStack.top())
+  println(minStack.getMin())
 }

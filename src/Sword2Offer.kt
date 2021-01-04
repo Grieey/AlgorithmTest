@@ -1,5 +1,6 @@
 import jdk.nashorn.internal.runtime.PropertyHashMap
 import java.util.*
+import kotlin.collections.HashSet
 import kotlin.collections.LinkedHashMap
 import kotlin.random.Random
 
@@ -1142,4 +1143,30 @@ class TripleInOne(val stackSize: Int) {
     if (isEmpty(stackNum)) return -1
     return array[top[stackNum] - 3]
   }
+}
+
+class MinStack() {
+
+  /** initialize your data structure here. */
+
+  val data = Stack<Int>()
+  val min = Stack<Int>()
+
+  fun push(x: Int) {
+    data.push(x)
+    if (min.isEmpty() || x <= getMin()) min.push(x)
+  }
+
+  fun pop() {
+    if (data.pop() == min.peek()) min.pop()
+  }
+
+  fun top(): Int {
+    return data.peek()
+  }
+
+  fun getMin(): Int {
+    return min.peek()
+  }
+
 }
