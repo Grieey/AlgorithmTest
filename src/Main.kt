@@ -43,5 +43,18 @@ fun main(args: Array<String>) {
 //  println(minStack.top())
 //  println(minStack.getMin())
 
-  println(findWhetherExistsPath(3, graph1, 0, 2))
+//  println(findWhetherExistsPath(3, graph1, 0, 2))
+
+  val root = TreeNode(3)
+  root.left = TreeNode(1).apply {
+    left = TreeNode(0)
+    right = TreeNode(2)
+  }
+
+  root.right = TreeNode(5).apply {
+    left = TreeNode(4)
+    right = TreeNode(6)
+  }
+
+  println(isValidBST(TreeNode(0)))
 }

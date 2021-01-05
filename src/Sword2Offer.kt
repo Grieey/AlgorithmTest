@@ -1227,3 +1227,20 @@ fun listOfDepth(tree: TreeNode?): Array<ListNode?> {
 
   return res.toTypedArray()
 }
+
+fun isValidBST(root: TreeNode?): Boolean {
+  if (root == null) return true
+  if (root.left != null && root.left?.`val`.orZero() >= root.`val`) return false
+  if (root.right != null && root.right?.`val`.orZero() <= root.`val`) return false
+  return isValidBST(root, null, null)
+}
+
+private fun isValidBST(root: TreeNode?, min: TreeNode?, max: TreeNode?): Boolean {
+  if (root == null) return true
+  if (min != null && root.`val` <= min.`val`) return false
+  if (max != null && root.`val` >= max.`val`) return false
+
+  return isValidBST(root.left, min, root) && isValidBST(root.right, root, max)
+}
+
+fun Int?.orZero() = this ?: 0
