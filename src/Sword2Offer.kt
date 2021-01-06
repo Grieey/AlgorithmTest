@@ -1,5 +1,5 @@
-import jdk.nashorn.internal.runtime.PropertyHashMap
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 import kotlin.collections.LinkedHashMap
 import kotlin.random.Random
@@ -1244,3 +1244,25 @@ private fun isValidBST(root: TreeNode?, min: TreeNode?, max: TreeNode?): Boolean
 }
 
 fun Int?.orZero() = this ?: 0
+
+private var ans: TreeNode? = null
+
+fun lowestCommonAncestor(root: TreeNode?, p: TreeNode, q: TreeNode): TreeNode? {
+  dfs(root, p, q)
+  return ans
+}
+
+private fun dfs(root: TreeNode?, p: TreeNode, q: TreeNode): Boolean {
+  if (root == null) return false
+  // 左子树中是否包含了p||q节点
+  val lson = dfs(root.left, p, q)
+  // 右子树中是否包含了p||q节点
+  val rson = dfs(root.right, p, q)
+
+  // 如果左子树包含了，右子树包含了，那么这个节点就是公共祖先
+  // 如果当前节点就是p||q，且另一个子树包含了q||p，那么当前节点就是公共祖先
+  if ((lson && rson)
+    || ((root.`val` == p.`val` || root.`val` == q.`val`) && (lson || rson))) ans = root
+
+  return lson || rson || root.`val` == p.`val` || root.`val` == q.`val`
+}

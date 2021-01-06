@@ -1,4 +1,5 @@
 import ArraysGet.graph1
+import kotlin.concurrent.thread
 
 /**
  * description: 练习算法的项目
@@ -45,16 +46,17 @@ fun main(args: Array<String>) {
 
 //  println(findWhetherExistsPath(3, graph1, 0, 2))
 
-  val root = TreeNode(3)
-  root.left = TreeNode(1).apply {
-    left = TreeNode(0)
-    right = TreeNode(2)
-  }
+//  val root = TreeNode(3)
+//  root.left = TreeNode(1).apply {
+//    left = TreeNode(0)
+//    right = TreeNode(2)
+//  }
+//
+//  root.right = TreeNode(5).apply {
+//    left = TreeNode(4)
+//    right = TreeNode(6)
+//  }
+//
+//  println(isValidBST(TreeNode(0)))
 
-  root.right = TreeNode(5).apply {
-    left = TreeNode(4)
-    right = TreeNode(6)
-  }
-
-  println(isValidBST(TreeNode(0)))
 }
