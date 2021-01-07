@@ -1266,3 +1266,28 @@ private fun dfs(root: TreeNode?, p: TreeNode, q: TreeNode): Boolean {
 
   return lson || rson || root.`val` == p.`val` || root.`val` == q.`val`
 }
+
+fun pathSum(root: TreeNode?, sum: Int): Int {
+  val map = HashMap<Int, Int>()
+  map[0] = 1
+
+  return prefixSum(root, map, sum, 0)
+}
+
+private fun prefixSum(root: TreeNode?, map: HashMap<Int, Int>, target: Int, curSum: Int): Int {
+  if (root == null) return 0
+
+  var res = 0
+  val cur = curSum + root.`val`
+
+  res += map.getOrDefault(cur - target, 0)
+
+  map[cur] = map.getOrDefault(cur, 0) + 1
+
+  res += prefixSum(root.left, map, target, curSum)
+  res += prefixSum(root.right, map, target, curSum)
+
+  map[cur] = map.getOrDefault(cur, 0) - 1
+
+  return res
+}
