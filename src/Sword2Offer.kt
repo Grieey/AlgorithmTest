@@ -1291,3 +1291,44 @@ private fun prefixSum(root: TreeNode?, map: HashMap<Int, Int>, target: Int, curS
 
   return res
 }
+
+fun insertBits(N: Int, M: Int, i: Int, j: Int): Int {
+  val n = Integer.toBinaryString(N).toCharArray()
+  val m = Integer.toBinaryString(M).toCharArray()
+  val res = CharArray(Math.max(m.size, n.size)) { '0' }
+  val offset = res.size - n.size
+
+  for (index in n.lastIndex downTo 0) {
+    res[index + offset] = n[index]
+  }
+
+  var tarIndex = m.lastIndex
+  for (index in i..j) {
+    val value = if (tarIndex < 0) '0' else m[tarIndex--]
+    res[res.lastIndex - index] = value
+  }
+
+  return Integer.parseInt(String(res), 2)
+}
+
+fun waysToStep(n: Int): Int {
+  return when(n) {
+    1 -> 1
+    2 -> 2
+    3 -> 4
+    else -> {
+      var dp1 = 1
+      var dp2 = 2
+      var dp3 = 4
+      var dpi = 0
+      for (i in 4..n) {
+        dpi = ((dp1 + dp2) % 1000000007 + dp3) % 1000000007
+        dp1 = dp2
+        dp2 = dp3
+        dp3 = dpi
+      }
+
+      dpi
+    }
+  }
+}

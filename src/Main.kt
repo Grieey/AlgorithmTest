@@ -58,5 +58,11 @@ fun main(args: Array<String>) {
 //  }
 //
 //  println(isValidBST(TreeNode(0)))
-
+//  val a = Integer.toBinaryString(1143207437)
+//  println(a.length)
+//
+//  println(Integer.toBinaryString(1243714409))
+//  println(Integer.toBinaryString(2049020777))
+  println(insertBits(2032243561, 10, 24, 29))
+//  println(insertBits(0, 31, 0, 4))
 }
