@@ -2,3 +2,5 @@
 .idea/
 # 忽略输出文件夹
 out/
+# 忽略rust相关输出
+target/
