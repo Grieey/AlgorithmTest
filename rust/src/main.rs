@@ -1,3 +1,5 @@
+use std::cmp;
+
 fn main() {
     let mut nums = vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4];
     let result = remove_duplicates(&mut nums);
@@ -34,8 +36,8 @@ pub fn max_profit(prices: &Vec<i32>) -> i32 {
     let mut sell = 0;
 
     for price in prices {
-        buy = max(buy, sell - price);
-        sell = max(sell, buy + price);
+        buy = cmp::max(buy, sell - price);
+        sell = cmp::max(sell, buy + price);
     }
 
     sell
